@@ -63,43 +63,53 @@
     .phone {
       position: relative;
       width: 393px;
-      height: 845px;
+      height: 879px;
       padding: 12px;
       border-radius: 54px;
       background: linear-gradient(145deg, #2c3446, #0b0f17);
       box-shadow: 0 0 0 2px #3b465c, 0 40px 80px rgba(0, 0, 0, .55), inset 0 0 0 2px #0b0f17;
       flex: none;
     }
-    .phone::before { /* kamera çentiği */
-      content: ""; position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
-      width: 96px; height: 26px; border-radius: 13px; background: #05070b; z-index: 2;
+    .screen { width: 369px; border-radius: 42px; overflow: hidden; background: var(--surface); }
+    /* Sahte durum çubuğu: kamera çentiği uygulamanın üst çubuğunu örtmesin diye ayrı alan */
+    .statusbar {
+      height: 34px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 30px; font: 700 13px -apple-system, "Segoe UI", sans-serif; color: var(--text);
     }
-    .phone iframe {
-      width: 369px; height: 821px; border: 0; border-radius: 42px; display: block; background: var(--bg);
-    }
+    .statusbar .notch { width: 92px; height: 24px; border-radius: 12px; background: #05070b; }
+    .statusbar .icons { display: flex; gap: 5px; align-items: center; }
+    .statusbar .battery { width: 22px; height: 11px; border: 1.5px solid var(--text); border-radius: 3px; position: relative; }
+    .statusbar .battery::after { content: ""; position: absolute; inset: 1.5px 5px 1.5px 1.5px; background: var(--text); border-radius: 1px; }
+    .phone iframe { width: 369px; height: 821px; border: 0; display: block; background: var(--bg); }
+    .mobile-bar { display: none; }
     .side { position: absolute; background: #1f2636; border-radius: 3px; }
     .side.power { right: -4px; top: 180px; width: 4px; height: 90px; }
     .side.vol1 { left: -4px; top: 150px; width: 4px; height: 56px; }
     .side.vol2 { left: -4px; top: 220px; width: 4px; height: 56px; }
 
     /* Küçük ekranlarda (telefonla açılınca) çerçevesiz, tam ekran uygulama */
+    /* Telefondan açılınca çerçevesiz tam ekran; üstte ince APK şeridi */
     @media (max-width: 520px) {
       body { padding: 0; display: block; }
       .info { display: none; }
-      .wrap { display: block; }
-      .phone { width: 100vw; height: 100dvh; padding: 0; border-radius: 0; box-shadow: none; background: none; }
-      .phone::before, .side { display: none; }
-      .phone iframe { width: 100%; height: 100%; border-radius: 0; }
-      .mobile-apk {
-        position: fixed; right: 12px; top: 12px; z-index: 3; display: inline-flex;
-        background: var(--accent-dark); color: #fff; font: 700 13px "Noto Serif", serif;
-        padding: 8px 12px; border-radius: 999px; text-decoration: none;
+      .wrap { display: flex; flex-direction: column; height: 100dvh; }
+      .mobile-bar {
+        display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        height: 44px; padding: 0 12px 0 16px; background: var(--surface); border-bottom: 1px solid var(--border);
+        font-size: 14px; font-weight: 700; flex: none;
       }
+      .mobile-bar a {
+        background: var(--accent-dark); color: #fff; text-decoration: none;
+        padding: 7px 14px; border-radius: 999px; font-size: 13px;
+      }
+      .phone { width: 100%; flex: 1; height: auto; padding: 0; border-radius: 0; box-shadow: none; background: none; }
+      .screen { width: 100%; height: 100%; border-radius: 0; }
+      .statusbar, .side { display: none; }
+      .phone iframe { width: 100%; height: 100%; }
     }
-    @media (min-width: 521px) { .mobile-apk { display: none; } }
     /* Kısa masaüstü ekranlarda telefonu sığdır */
-    @media (min-width: 521px) and (max-height: 900px) {
-      .phone { transform: scale(calc((100vh - 48px) / 845)); transform-origin: center; }
+    @media (min-width: 521px) and (max-height: 930px) {
+      .phone { transform: scale(calc((100vh - 48px) / 879)); transform-origin: center; }
     }
   </style>
 </head>
@@ -128,11 +138,22 @@
       <p class="note">Yalnızca arayüz demosudur; backend yoktur, tüm veriler örnektir. Harita verisi © OpenStreetMap katkıda bulunanlar.</p>
     </section>
 
+    <div class="mobile-bar">
+      <span>SporApp demo</span>
+      <a href="https://github.com/egeardac/sporapp/releases/latest/download/SporApp.apk">Android APK'yı indir</a>
+    </div>
+
     <div class="phone" aria-label="Telefon önizlemesi">
       <span class="side power"></span><span class="side vol1"></span><span class="side vol2"></span>
-      <iframe src="app/" title="SporApp" allow="fullscreen"></iframe>
+      <div class="screen">
+        <div class="statusbar" aria-hidden="true">
+          <span>9:41</span>
+          <span class="notch"></span>
+          <span class="icons">5G <span class="battery"></span></span>
+        </div>
+        <iframe src="app/" title="SporApp" allow="fullscreen"></iframe>
+      </div>
     </div>
   </div>
-  <a class="mobile-apk" href="https://github.com/egeardac/sporapp/releases/latest/download/SporApp.apk">APK indir</a>
 </body>
 </html>
